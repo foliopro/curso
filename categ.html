@@ -14,7 +14,7 @@
 
     /* =====================
        TEMAS
-       ===================== */
+    ====================== */
     :root {
         --fondo: #f2f3f7;
         --card-bg: #fff;
@@ -35,7 +35,7 @@
 
     /* =====================
        HEADER
-       ===================== */
+    ====================== */
     header {
         padding: 16px 20px;
         background: var(--header-bg);
@@ -63,7 +63,7 @@
 
     /* =====================
        CARDS
-       ===================== */
+    ====================== */
     #msg {
         text-align: center;
         padding: 25px;
@@ -86,6 +86,7 @@
         overflow: hidden;
         transition: .2s ease;
         color: var(--text);
+        position: relative;
     }
 
     .card img {
@@ -96,12 +97,29 @@
 
     .card-body {
         padding: 15px;
+        position: relative;
+    }
+
+    /* ICONO DETALLE ℹ️ */
+    .info-icon {
+        font-size: 18px;
+        margin-right: 8px;
+        cursor: pointer;
+        display: inline-block;
+        color: var(--text);
+        transition: 0.2s;
+    }
+
+    .info-icon:hover {
+        opacity: 0.7;
     }
 
     .card-title {
         font-size: 18px;
         font-weight: bold;
         margin-bottom: 6px;
+        display: inline-block;
+        cursor: pointer;
         color: var(--text);
     }
 
@@ -117,7 +135,7 @@
 
     /* =====================
        MODAL
-       ===================== */
+    ====================== */
     #modal-bg {
         position: fixed;
         display: none;
@@ -193,7 +211,7 @@
 <script>
 /* ===========================
    URLs de tus hojas reales
-   =========================== */
+=========================== */
 const URL_USUARIO_CURSOS = 
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTW7_oAIdXB__TqA5-TIoiZ90qKfD109ihIW7PbEHCHZkZs5cMny-MGs3iukHz5OWFskFYBPIaHjA5J/pub?output=csv";
 
@@ -204,8 +222,8 @@ const URL_CURSOS_CONT =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQM-3mBbdkaK-jDv6DVdQd0VkehUZie71C5McD_djtCiN8GVSLA2ERqlQvmd17-o4ZZQB1Qrs1QXVGU/pub?output=csv";
 
 /* ===========================
-   Validar sesión
-   =========================== */
+   Validación de sesión
+=========================== */
 const usuarioLog = localStorage.getItem("usuario");
 if (!usuarioLog) window.location.href = "index.html";
 
@@ -219,8 +237,8 @@ function parseCSV(text) {
 }
 
 /* ===========================
-   Tema Claro/Oscuro
-   =========================== */
+   Tema claro/oscuro
+=========================== */
 function aplicarTema() {
     let tema = localStorage.getItem("tema") || "light";
     if (tema === "dark") document.body.classList.add("dark");
@@ -238,15 +256,15 @@ aplicarTema();
 
 /* ===========================
    Logout
-   =========================== */
+=========================== */
 function logout() {
     localStorage.clear();
     window.location.href = "index.html";
 }
 
 /* ===========================
-   Modal
-   =========================== */
+   Modal funciones
+=========================== */
 function abrirModal(titulo, detalle) {
     document.getElementById("modal-title").textContent = titulo;
     document.getElementById("modal-detalle").textContent = detalle;
@@ -262,8 +280,16 @@ document.getElementById("modal-bg").onclick = (e) => {
 };
 
 /* ===========================
-   Cargar Cursos
-   =========================== */
+   Buscar Detalle del curso
+=========================== */
+function buscarDetalle(codCurso, contenidoRows) {
+    let row = contenidoRows.find(r => r[0] === codCurso);
+    return row ? (row[5] || "Sin detalle disponible") : "Sin información.";
+}
+
+/* ===========================
+   Cargar cursos
+=========================== */
 async function cargarCursos() {
     try {
         const resUC = await fetch(URL_USUARIO_CURSOS);
@@ -280,9 +306,9 @@ async function cargarCursos() {
             return;
         }
 
-        const resC = await fetch(URL_CURSOS_BDD);
-        const csvC = await resC.text();
-        let rowsCB = parseCSV(csvC);
+        const resCB = await fetch(URL_CURSOS_BDD);
+        const csvCB = await resCB.text();
+        let rowsCB = parseCSV(csvCB);
         rowsCB.shift();
 
         const resCont = await fetch(URL_CURSOS_CONT);
@@ -301,28 +327,32 @@ async function cargarCursos() {
                     let card = document.createElement("div");
                     card.className = "card";
 
+                    let tituloCurso = row[1];
+                    let detalleCurso = buscarDetalle(cod, rowsCont);
+
                     card.innerHTML = `
-                        <img src="${row[3]}">
+                        <img src="${row[3]}" class="img-curso">
+
                         <div class="card-body">
-                            <div class="card-title">${row[1]}</div>
+
+                            <span class="info-icon" onclick="abrirModal('${tituloCurso}','${detalleCurso.replace(/'/g, "\\'")}')">
+                                ℹ️
+                            </span>
+
+                            <span class="card-title titulo-curso">${row[1]}</span>
+
                             <div class="card-desc">${row[2]}</div>
                         </div>
                     `;
 
-                    let tituloCurso = row[1];
-
-                    /* Hover (PC) */
-                    card.onmouseenter = () => {
-                        if (window.innerWidth > 900) {
-                            let detalle = buscarDetalle(cod, rowsCont);
-                            abrirModal(tituloCurso, detalle);
-                        }
+                    // Clic en imagen → Entrar al curso
+                    card.querySelector(".img-curso").onclick = () => {
+                        alert("Entrar al curso: " + tituloCurso);
                     };
 
-                    /* Clic (Móvil/PC) */
-                    card.onclick = () => {
-                        let detalle = buscarDetalle(cod, rowsCont);
-                        abrirModal(tituloCurso, detalle);
+                    // Clic en título → Entrar al curso
+                    card.querySelector(".titulo-curso").onclick = () => {
+                        alert("Entrar al curso: " + tituloCurso);
                     };
 
                     cont.appendChild(card);
@@ -334,11 +364,6 @@ async function cargarCursos() {
         console.error(e);
         msg.textContent = "Error al cargar cursos.";
     }
-}
-
-function buscarDetalle(codCurso, contenidoRows) {
-    let row = contenidoRows.find(r => r[0] === codCurso);
-    return row ? (row[5] || "Sin detalle disponible") : "Sin información.";
 }
 
 cargarCursos();
