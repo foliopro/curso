@@ -21,14 +21,6 @@
         justify-content: center;
         align-items: center;
         background: #f5f5f5;
-        flex-direction: column;
-    }
-    .welcome-box {
-        text-align: center;
-        margin-bottom: 20px;
-        font-size: 20px;
-        font-weight: bold;
-        color: #333;
     }
     .login-container {
         width: 80%;
@@ -84,15 +76,12 @@
 <div class="left-box"></div>
 
 <div class="right-box">
-
-    <!-- SALUDO PERSONALIZADO -->
-    <div id="saludo" class="welcome-box"></div>
-
     <div class="login-container">
         <h1>CanoMDigital</h1>
 
         <input id="user" type="text" placeholder="Usuario">
 
+        <!-- Campo contraseña con icono -->
         <div style="position: relative;">
             <input id="pass" type="password" placeholder="Contraseña" style="padding-right: 40px;">
             <span id="togglePass">👁️</span>
@@ -105,10 +94,11 @@
 </div>
 
 <script>
+// URL del CSV real de Google Sheets
 const SHEET_URL =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vShtZKwAc_7NELD5egApRLhY-w9r_V1Px5y5KFx5XLQzCfZF9LEBEJ0ClihZVUlrdoahnolXDzsGELu/pub?output=csv";
 
-/* Mostrar / ocultar contraseña */
+// Mostrar / ocultar contraseña
 const passInput = document.getElementById("pass");
 const togglePass = document.getElementById("togglePass");
 
@@ -122,7 +112,7 @@ togglePass.addEventListener("click", () => {
     }
 });
 
-/* LOGIN */
+// LOGIN:
 async function login() {
     let u = document.getElementById("user").value.trim();
     let p = document.getElementById("pass").value.trim();
@@ -138,25 +128,29 @@ async function login() {
         const response = await fetch(SHEET_URL);
         const csv = await response.text();
 
+        // Parseo seguro de CSV
         let rows = csv
             .split("\n")
             .map(r => r.replace(/\r/g, "").trim())
             .filter(r => r.length > 0)
             .map(r => r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
 
-        rows.shift(); // encabezado
+        rows.shift(); // Quitar encabezado
 
         let found = false;
 
         rows.forEach(row => {
 
-            let usuario     = (row[0] || "").replace(/"/g, "").trim();
+            let usuario   = (row[0] || "").replace(/"/g, "").trim();
             let descripcion = row[1];
-            let vence       = row[4];
-            let tipo        = row[5];
-            let estado      = row[6];
-            let password    = (row[7] || "").replace(/"/g, "").trim();
+            let wapp      = row[2];
+            let email     = row[3];
+            let vence     = row[4];
+            let tipo      = row[5];
+            let estado    = row[6];
+            let password  = (row[7] || "").replace(/"/g, "").trim();
 
+            // Validación REAL contra la hoja
             if (usuario === u && password === p) {
                 found = true;
 
@@ -165,15 +159,13 @@ async function login() {
                     return;
                 }
 
-                /* GUARDAR DATOS */
+                // Guardar datos
                 localStorage.setItem("usuario", usuario);
-                localStorage.setItem("usuario_nombre", descripcion);
                 localStorage.setItem("estado", estado);
                 localStorage.setItem("vence", vence);
                 localStorage.setItem("tipo", tipo);
 
-                /* REDIRECCIÓN CORRECTA */
-                window.location.href = "cursos.html";
+                window.location.href = "categ.html";
             }
         });
 
@@ -182,23 +174,10 @@ async function login() {
         }
 
     } catch (e) {
-        error.textContent = "Error con la base de datos.";
+        error.textContent = "Error de conexión con la base de datos.";
         console.error(e);
     }
 }
-
-/* SALUDO AUTOMÁTICO */
-function saludoDinamico() {
-    let h = new Date().getHours();
-    let saludo =
-        h < 12 ? "Buenos días" :
-        h < 18 ? "Buenas tardes" :
-        "Buenas noches";
-
-    document.getElementById("saludo").textContent =
-        saludo + ", bienvenido a CanoMDigital";
-}
-saludoDinamico();
 </script>
 
 </body>
