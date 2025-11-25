@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard - CanoMDigital</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f2f3f7;
+    }
+
+    header {
+        padding: 20px;
+        background: #000;
+        color: white;
+        text-align: center;
+        font-size: 26px;
+        letter-spacing: 1px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+
+    .container {
+        padding: 25px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 25px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    }
+
+    .card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #222;
+    }
+
+    .card-desc {
+        font-size: 14px;
+        color: #555;
+    }
+
+    #msg {
+        text-align: center;
+        padding: 20px;
+        font-size: 20px;
+        color: #444;
+    }
+</style>
+
+</head>
+<body>
+
+<header>CanoMDigital – Mis Cursos</header>
+
+<div id="msg">Cargando cursos...</div>
+<div class="container" id="coursesContainer"></div>
+
+<script>
+// ==========================================
+// URLs reales de tus hojas de Google Sheets
+// ==========================================
+const URL_USUARIO_CURSOS = 
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vTW7_oAIdXB__TqA5-TIoiZ90qKfD109ihIW7PbEHCHZkZs5cMny-MGs3iukHz5OWFskFYBPIaHjA5J/pub?output=csv";
+
+const URL_CURSOS_BDD =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vRK5fDUiPrh1ihVYT-aC8GS9wfCcSuc0Auy2WpcuExPLkL36ZXasULcpKdTp_GYHXUrePujbjOFXrfR/pub?output=csv";
+
+
+// ==========================================
+// Validar sesión
+// ==========================================
+const usuarioLog = localStorage.getItem("usuario");
+
+if (!usuarioLog) {
+    window.location.href = "index.html";
+}
+
+
+// ==========================================
+// Función para leer CSV y convertirlo seguro
+// ==========================================
+function parseCSV(text) {
+    return text
+        .split("\n")
+        .map(r => r.replace(/\r/g, "").trim())
+        .filter(r => r.length > 0)
+        .map(r => r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
+}
+
+
+// ==========================================
+// Cargar cursos asignados al usuario
+// ==========================================
+async function cargarCursos() {
+    try {
+        // 1) Descargar Usuario_Cursos
+        const resUC = await fetch(URL_USUARIO_CURSOS);
+        const csvUC = await resUC.text();
+        let rowsUC = parseCSV(csvUC);
+        rowsUC.shift(); // quitar encabezado
+
+        // Filtrar cursos asignados
+        let cursosAsignados = rowsUC
+            .filter(row => row[0].replace(/"/g,"").trim() === usuarioLog && row[2] === "A")
+            .map(row => row[1].trim());
+
+        if (cursosAsignados.length === 0) {
+            document.getElementById("msg").textContent = "No tienes cursos asignados.";
+            return;
+        }
+
+        // 2) Descargar Cursos_Bdd
+        const resCB = await fetch(URL_CURSOS_BDD);
+        const csvCB = await resCB.text();
+        let rowsCB = parseCSV(csvCB);
+        rowsCB.shift(); // quitar encabezado
+
+        let container = document.getElementById("coursesContainer");
+        container.innerHTML = "";
+        document.getElementById("msg").style.display = "none";
+
+        // 3) Mostrar cards
+        cursosAsignados.forEach(cod => {
+            rowsCB.forEach(row => {
+                let cursoCod = row[0];
+                let titulo = row[1];
+                let desc = row[2];
+                let img = row[3];
+
+                if (cursoCod === cod) {
+                    // Crear card
+                    let card = document.createElement("div");
+                    card.classList.add("card");
+
+                    card.innerHTML = `
+                        <img src="${img}">
+                        <div class="card-body">
+                            <div class="card-title">${titulo}</div>
+                            <div class="card-desc">${desc}</div>
+                        </div>
+                    `;
+
+                    // Al hacer clic → guardar curso y continuar
+                    card.onclick = () => {
+                        localStorage.setItem("curso_cod", cursoCod);
+                        localStorage.setItem("curso_titulo", titulo);
+                        localStorage.setItem("curso_desc", desc);
+                        localStorage.setItem("curso_img", img);
+
+                        alert("Curso seleccionado: " + titulo);
+                        // Luego aquí se abrirá curso.html
+                    };
+
+                    container.appendChild(card);
+                }
+            });
+        });
+
+    } catch (e) {
+        console.error(e);
+        document.getElementById("msg").textContent =
+            "Error cargando cursos.";
+    }
+}
+
+cargarCursos();
+</script>
+
+</body>
+</html>
