@@ -2,204 +2,273 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Categorías - CanoMDigital</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Mis Cursos - canomdigital</title>
 
 <style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: var(--fondo);
-        transition: 0.3s;
-    }
+/* ============================================
+   VARIABLES DEL TEMA PREMIUM
+============================================ */
+:root {
+    --bg-gradient: linear-gradient(135deg, #060818, #111827, #1f2937);
+    --card-bg: rgba(15,23,42,0.92);
+    --text-main: #e5e7eb;
+    --text-muted: #9ca3af;
+    --accent: #38bdf8;
+    --accent-soft: rgba(56,189,248,0.2);
+    --border-soft: rgba(148,163,184,0.25);
+}
 
-    /* =====================
-       TEMAS
-    ====================== */
-    :root {
-        --fondo: #f2f3f7;
-        --card-bg: #fff;
-        --text: #222;
-        --desc: #666;
-        --header-bg: #000;
-        --header-text: #fff;
-    }
+.dark {
+    --bg-gradient: linear-gradient(135deg, #000000, #0e0e0e, #1a1a1a);
+    --card-bg: #1c1c1c;
+    --text-main: #f0f0f0;
+    --text-muted: #c8c8c8;
+    --accent: #5ecbff;
+    --accent-soft: rgba(94,203,255,0.18);
+    --border-soft: rgba(255,255,255,0.18);
+}
 
-    .dark {
-        --fondo: #121212;
-        --card-bg: #1f1f1f;
-        --text: #f1f1f1;
-        --desc: #ccc;
-        --header-bg: #222;
-        --header-text: #fff;
-    }
+/* ============================================
+   Cuerpo
+============================================ */
+body {
+    margin: 0;
+    background: var(--bg-gradient);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: var(--text-main);
+    min-height: 100vh;
+}
 
-    /* =====================
-       HEADER
-    ====================== */
+/* ============================================
+   HEADER PREMIUM
+============================================ */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 24px;
+    background: rgba(15,23,42,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-soft);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border-soft);
+}
+
+.header-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.header-brand {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.header-menu {
+    display: flex;
+    gap: 18px;
+}
+
+.menu-btn {
+    font-size: 14px;
+    color: var(--text-main);
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: 0.2s;
+}
+
+.menu-btn:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+/* ============================================
+   CONTENIDO
+============================================ */
+#msg {
+    padding: 30px;
+    text-align: center;
+    font-size: 20px;
+    color: var(--text-main);
+}
+
+.container {
+    padding: 30px 24px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 26px;
+}
+
+/* ============================================
+   CARD PREMIUM
+============================================ */
+.card {
+    background: var(--card-bg);
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid var(--border-soft);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    transition: 0.25s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.45);
+}
+
+.card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 18px;
+}
+
+/* ICONO ℹ️ */
+.info-icon {
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 8px;
+    vertical-align: middle;
+    transition: 0.2s;
+}
+
+.info-icon:hover {
+    opacity: 0.7;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    display: inline-block;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.card-desc {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+/* ============================================
+   MODAL PREMIUM GLASSMORPHISM
+============================================ */
+#modal-bg {
+    position: fixed;
+    inset: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.55);
+    backdrop-filter: blur(6px);
+    z-index: 50;
+}
+
+#modal {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(14px);
+    border-radius: 20px;
+    padding: 28px;
+    max-width: 480px;
+    width: 92%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    position: relative;
+    animation: fadeIn 0.25s ease;
+}
+
+#modal h2 {
+    margin-top: 0;
+    color: white;
+}
+
+#modal p {
+    color: white;
+    font-size: 15px;
+    line-height: 1.5em;
+}
+
+.close-modal {
+    position: absolute;
+    right: 14px;
+    top: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* ============================================
+   RESPONSIVE
+============================================ */
+@media (max-width: 600px) {
     header {
-        padding: 16px 20px;
-        background: var(--header-bg);
-        color: var(--header-text);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .menu-options {
-        display: flex;
-        gap: 20px;
-    }
-
-    .menu-btn {
-        color: var(--header-text);
-        cursor: pointer;
-        font-size: 16px;
-        transition: 0.2s;
-    }
-
-    .menu-btn:hover {
-        opacity: 0.7;
-    }
-
-    /* =====================
-       CARDS
-    ====================== */
-    #msg {
-        text-align: center;
-        padding: 25px;
-        font-size: 20px;
-        color: var(--text);
+        padding: 10px 16px;
     }
 
     .container {
-        padding: 20px;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
+        padding: 22px 16px;
     }
-
-    .card {
-        background: var(--card-bg);
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        cursor: pointer;
-        overflow: hidden;
-        transition: .2s ease;
-        color: var(--text);
-        position: relative;
-    }
-
-    .card img {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-    }
-
-    .card-body {
-        padding: 15px;
-        position: relative;
-    }
-
-    /* ICONO DETALLE ℹ️ */
-    .info-icon {
-        font-size: 18px;
-        margin-right: 8px;
-        cursor: pointer;
-        display: inline-block;
-        color: var(--text);
-        transition: 0.2s;
-    }
-
-    .info-icon:hover {
-        opacity: 0.7;
-    }
-
-    .card-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 6px;
-        display: inline-block;
-        cursor: pointer;
-        color: var(--text);
-    }
-
-    .card-desc {
-        font-size: 14px;
-        color: var(--desc);
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-    }
-
-    /* =====================
-       MODAL
-    ====================== */
-    #modal-bg {
-        position: fixed;
-        display: none;
-        justify-content: center;
-        align-items: center;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.45);
-        backdrop-filter: blur(5px);
-        z-index: 10;
-    }
-
-    #modal {
-        background: rgba(255,255,255,0.15);
-        backdrop-filter: blur(12px);
-        border-radius: 15px;
-        width: 90%;
-        max-width: 450px;
-        padding: 25px;
-        color: #fff;
-        position: relative;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-        animation: fadeIn 0.3s ease;
-    }
-
-    #modal h2 {
-        margin-top: 0;
-        margin-bottom: 10px;
-    }
-
-    #modal p {
-        font-size: 16px;
-    }
-
-    .close-modal {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 22px;
-        cursor: pointer;
-    }
-
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.9); }
-        to { opacity: 1; transform: scale(1); }
-    }
+}
 </style>
-
 </head>
+
 <body>
 
+<!-- ============================================
+     HEADER PREMIUM
+============================================ -->
 <header>
-    <div style="font-size:20px;font-weight:bold;">Mis Cursos</div>
+    <div class="header-left">
+        <div class="header-logo">
+            <img src="REEMPLAZA_AQUI_URL_DEL_LOGO">
+        </div>
+        <div class="header-brand">canomdigital</div>
+    </div>
 
-    <div class="menu-options">
-        <div id="temaBtn" class="menu-btn">Tema Actual</div>
-        <div onclick="logout()" class="menu-btn">Cerrar Sesión</div>
+    <div class="header-menu">
+        <div id="temaBtn" class="menu-btn">Tema</div>
+        <div class="menu-btn" onclick="logout()">Cerrar sesión</div>
     </div>
 </header>
 
+<!-- ============================================
+     CONTENIDO DE CURSOS
+============================================ -->
 <div id="msg">Cargando cursos...</div>
+
 <div class="container" id="coursesContainer"></div>
 
-<!-- MODAL -->
+<!-- ============================================
+     MODAL DETAIL
+============================================ -->
 <div id="modal-bg">
     <div id="modal">
         <div class="close-modal" onclick="cerrarModal()">✖</div>
@@ -209,9 +278,7 @@
 </div>
 
 <script>
-/* ===========================
-   URLs de tus hojas reales
-=========================== */
+/* URLs */
 const URL_USUARIO_CURSOS = 
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTW7_oAIdXB__TqA5-TIoiZ90qKfD109ihIW7PbEHCHZkZs5cMny-MGs3iukHz5OWFskFYBPIaHjA5J/pub?output=csv";
 
@@ -221,152 +288,111 @@ const URL_CURSOS_BDD =
 const URL_CURSOS_CONT =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vQM-3mBbdkaK-jDv6DVdQd0VkehUZie71C5McD_djtCiN8GVSLA2ERqlQvmd17-o4ZZQB1Qrs1QXVGU/pub?output=csv";
 
-/* ===========================
-   Validación de sesión
-=========================== */
-const usuarioLog = localStorage.getItem("usuario");
-if (!usuarioLog) window.location.href = "index.html";
+/* Validación de sesión */
+if (!localStorage.getItem("usuario")) {
+    window.location.href = "index.html";
+}
 
 /* CSV parser */
-function parseCSV(text) {
-    return text
-        .split("\n")
-        .map(r => r.replace(/\r/g, "").trim())
-        .filter(r => r.length > 0)
+function parseCSV(t) {
+    return t.split("\n")
+        .map(r => r.replace(/\r/g,"").trim())
+        .filter(r => r.length)
         .map(r => r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
 }
 
-/* ===========================
-   Tema claro/oscuro
-=========================== */
+/* Tema */
 function aplicarTema() {
-    let tema = localStorage.getItem("tema") || "light";
-    if (tema === "dark") document.body.classList.add("dark");
-    else document.body.classList.remove("dark");
+    const tema = localStorage.getItem("tema") || "light";
+    document.body.classList.toggle("dark", tema === "dark");
 }
-
 document.getElementById("temaBtn").onclick = () => {
-    let tema = localStorage.getItem("tema") || "light";
-    tema = (tema === "light") ? "dark" : "light";
-    localStorage.setItem("tema", tema);
+    const newTema = (localStorage.getItem("tema") || "light") === "light" ? "dark" : "light";
+    localStorage.setItem("tema", newTema);
     aplicarTema();
 };
-
 aplicarTema();
 
-/* ===========================
-   Logout
-=========================== */
+/* Logout */
 function logout() {
     localStorage.clear();
     window.location.href = "index.html";
 }
 
-/* ===========================
-   Modal funciones
-=========================== */
-function abrirModal(titulo, detalle) {
-    document.getElementById("modal-title").textContent = titulo;
-    document.getElementById("modal-detalle").textContent = detalle;
+/* Modal */
+function abrirModal(t, d) {
+    document.getElementById("modal-title").textContent = t;
+    document.getElementById("modal-detalle").textContent = d;
     document.getElementById("modal-bg").style.display = "flex";
 }
-
 function cerrarModal() {
     document.getElementById("modal-bg").style.display = "none";
 }
-
 document.getElementById("modal-bg").onclick = (e) => {
     if (e.target.id === "modal-bg") cerrarModal();
 };
 
-/* ===========================
-   Buscar Detalle del curso
-=========================== */
-function buscarDetalle(codCurso, contenidoRows) {
-    let row = contenidoRows.find(r => r[0] === codCurso);
+/* Buscar Detalle */
+function buscarDetalle(code, rows) {
+    let row = rows.find(r => r[0] === code);
     return row ? (row[5] || "Sin detalle disponible") : "Sin información.";
 }
 
-/* ===========================
-   Cargar cursos
-=========================== */
-async function cargarCursos() {
-    try {
-        const resUC = await fetch(URL_USUARIO_CURSOS);
-        const csvUC = await resUC.text();
-        let rowsUC = parseCSV(csvUC);
-        rowsUC.shift();
+/* Cargar Cursos */
+async function cargar() {
+    const user = localStorage.getItem("usuario");
 
-        let cursosAsign = rowsUC
-            .filter(r => r[0].replace(/"/g,"").trim() === usuarioLog && r[2] === "A")
-            .map(r => r[1]);
+    const uc = parseCSV(await (await fetch(URL_USUARIO_CURSOS)).text());
+    const cb = parseCSV(await (await fetch(URL_CURSOS_BDD)).text());
+    const cc = parseCSV(await (await fetch(URL_CURSOS_CONT)).text());
 
-        if (cursosAsign.length === 0) {
-            msg.textContent = "No tienes cursos asignados.";
-            return;
-        }
+    uc.shift(); cb.shift(); cc.shift();
 
-        const resCB = await fetch(URL_CURSOS_BDD);
-        const csvCB = await resCB.text();
-        let rowsCB = parseCSV(csvCB);
-        rowsCB.shift();
+    let userCourses = uc.filter(r => r[0] === user && r[2] === "A").map(r => r[1]);
 
-        const resCont = await fetch(URL_CURSOS_CONT);
-        const csvCont = await resCont.text();
-        let rowsCont = parseCSV(csvCont);
-        rowsCont.shift();
-
-        let cont = document.getElementById("coursesContainer");
-        cont.innerHTML = "";
-        document.getElementById("msg").style.display = "none";
-
-        cursosAsign.forEach(cod => {
-            rowsCB.forEach(row => {
-                if (row[0] === cod) {
-
-                    let card = document.createElement("div");
-                    card.className = "card";
-
-                    let tituloCurso = row[1];
-                    let detalleCurso = buscarDetalle(cod, rowsCont);
-
-                    card.innerHTML = `
-                        <img src="${row[3]}" class="img-curso">
-
-                        <div class="card-body">
-
-                            <span class="info-icon" onclick="abrirModal('${tituloCurso}','${detalleCurso.replace(/'/g, "\\'")}')">
-                                ℹ️
-                            </span>
-
-                            <span class="card-title titulo-curso">${row[1]}</span>
-
-                            <div class="card-desc">${row[2]}</div>
-                        </div>
-                    `;
-
-                    // Clic en imagen → Entrar al curso
-                    card.querySelector(".img-curso").onclick = () => {
-                        alert("Entrar al curso: " + tituloCurso);
-                    };
-
-                    // Clic en título → Entrar al curso
-                    card.querySelector(".titulo-curso").onclick = () => {
-                        alert("Entrar al curso: " + tituloCurso);
-                    };
-
-                    cont.appendChild(card);
-                }
-            });
-        });
-
-    } catch (e) {
-        console.error(e);
-        msg.textContent = "Error al cargar cursos.";
+    if (!userCourses.length) {
+        msg.textContent = "No tienes cursos asignados.";
+        return;
     }
+
+    let cont = document.getElementById("coursesContainer");
+    cont.innerHTML = "";
+    msg.style.display = "none";
+
+    userCourses.forEach(cod => {
+        cb.forEach(row => {
+            if (row[0] === cod) {
+                let titulo = row[1];
+                let desc = row[2];
+                let img = row[3];
+                let detalle = buscarDetalle(cod, cc);
+
+                let card = document.createElement("div");
+                card.className = "card";
+
+                card.innerHTML = `
+                    <img src="${img}" class="img-curso">
+
+                    <div class="card-body">
+                        <span class="info-icon" onclick="abrirModal('${titulo}','${detalle.replace(/'/g,"\\'")}')">ℹ️</span>
+                        <span class="card-title titulo-curso">${titulo}</span>
+                        <div class="card-desc">${desc}</div>
+                    </div>
+                `;
+
+                /* Click para entrar al curso (mañana lo hacemos completo) */
+                card.querySelector(".img-curso").onclick =
+                card.querySelector(".titulo-curso").onclick = () => {
+                    alert("Acceder al curso: " + titulo);
+                };
+
+                cont.appendChild(card);
+            }
+        });
+    });
 }
 
-cargarCursos();
+cargar();
 </script>
 
 </body>
