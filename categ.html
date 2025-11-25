@@ -8,23 +8,67 @@
     body {
         margin: 0;
         font-family: Arial, sans-serif;
-        background: #f2f3f7;
+        background: var(--fondo);
+        transition: 0.3s;
     }
 
+    /* =====================
+       TEMAS
+       ===================== */
+    :root {
+        --fondo: #f2f3f7;
+        --card-bg: #fff;
+        --text: #222;
+        --desc: #666;
+        --header-bg: #000;
+        --header-text: #fff;
+    }
+
+    .dark {
+        --fondo: #121212;
+        --card-bg: #1f1f1f;
+        --text: #f1f1f1;
+        --desc: #ccc;
+        --header-bg: #222;
+        --header-text: #fff;
+    }
+
+    /* =====================
+       HEADER
+       ===================== */
     header {
-        padding: 20px;
-        background: #000;
-        color: white;
-        text-align: center;
-        font-size: 22px;
-        letter-spacing: 1px;
+        padding: 16px 20px;
+        background: var(--header-bg);
+        color: var(--header-text);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
+    .menu-options {
+        display: flex;
+        gap: 20px;
+    }
+
+    .menu-btn {
+        color: var(--header-text);
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.2s;
+    }
+
+    .menu-btn:hover {
+        opacity: 0.7;
+    }
+
+    /* =====================
+       CARDS
+       ===================== */
     #msg {
         text-align: center;
         padding: 25px;
         font-size: 20px;
-        color: #555;
+        color: var(--text);
     }
 
     .container {
@@ -35,12 +79,13 @@
     }
 
     .card {
-        background: white;
+        background: var(--card-bg);
         border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         cursor: pointer;
         overflow: hidden;
         transition: .2s ease;
+        color: var(--text);
     }
 
     .card img {
@@ -57,38 +102,114 @@
         font-size: 18px;
         font-weight: bold;
         margin-bottom: 6px;
+        color: var(--text);
     }
 
     .card-desc {
         font-size: 14px;
-        color: #555;
+        color: var(--desc);
     }
 
     .card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     }
 
+    /* =====================
+       MODAL
+       ===================== */
+    #modal-bg {
+        position: fixed;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(5px);
+        z-index: 10;
+    }
+
+    #modal {
+        background: rgba(255,255,255,0.15);
+        backdrop-filter: blur(12px);
+        border-radius: 15px;
+        width: 90%;
+        max-width: 450px;
+        padding: 25px;
+        color: #fff;
+        position: relative;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        animation: fadeIn 0.3s ease;
+    }
+
+    #modal h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    #modal p {
+        font-size: 16px;
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 22px;
+        cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
 </style>
 
 </head>
 <body>
 
-<header>Mis Cursos</header>
+<header>
+    <div style="font-size:20px;font-weight:bold;">Mis Cursos</div>
+
+    <div class="menu-options">
+        <div id="temaBtn" class="menu-btn">Tema Actual</div>
+        <div onclick="logout()" class="menu-btn">Cerrar Sesión</div>
+    </div>
+</header>
 
 <div id="msg">Cargando cursos...</div>
 <div class="container" id="coursesContainer"></div>
 
+<!-- MODAL -->
+<div id="modal-bg">
+    <div id="modal">
+        <div class="close-modal" onclick="cerrarModal()">✖</div>
+        <h2 id="modal-title"></h2>
+        <p id="modal-detalle"></p>
+    </div>
+</div>
+
 <script>
+/* ===========================
+   URLs de tus hojas reales
+   =========================== */
 const URL_USUARIO_CURSOS = 
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTW7_oAIdXB__TqA5-TIoiZ90qKfD109ihIW7PbEHCHZkZs5cMny-MGs3iukHz5OWFskFYBPIaHjA5J/pub?output=csv";
 
 const URL_CURSOS_BDD =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vRK5fDUiPrh1ihVYT-aC8GS9wfCcSuc0Auy2WpcuExPLkL36ZXasULcpKdTp_GYHXUrePujbjOFXrfR/pub?output=csv";
 
+const URL_CURSOS_CONT =
+"https://docs.google.com/spreadsheets/d/e/2PACX-1vQM-3mBbdkaK-jDv6DVdQd0VkehUZie71C5McD_djtCiN8GVSLA2ERqlQvmd17-o4ZZQB1Qrs1QXVGU/pub?output=csv";
+
+/* ===========================
+   Validar sesión
+   =========================== */
 const usuarioLog = localStorage.getItem("usuario");
 if (!usuarioLog) window.location.href = "index.html";
 
+/* CSV parser */
 function parseCSV(text) {
     return text
         .split("\n")
@@ -97,6 +218,52 @@ function parseCSV(text) {
         .map(r => r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
 }
 
+/* ===========================
+   Tema Claro/Oscuro
+   =========================== */
+function aplicarTema() {
+    let tema = localStorage.getItem("tema") || "light";
+    if (tema === "dark") document.body.classList.add("dark");
+    else document.body.classList.remove("dark");
+}
+
+document.getElementById("temaBtn").onclick = () => {
+    let tema = localStorage.getItem("tema") || "light";
+    tema = (tema === "light") ? "dark" : "light";
+    localStorage.setItem("tema", tema);
+    aplicarTema();
+};
+
+aplicarTema();
+
+/* ===========================
+   Logout
+   =========================== */
+function logout() {
+    localStorage.clear();
+    window.location.href = "index.html";
+}
+
+/* ===========================
+   Modal
+   =========================== */
+function abrirModal(titulo, detalle) {
+    document.getElementById("modal-title").textContent = titulo;
+    document.getElementById("modal-detalle").textContent = detalle;
+    document.getElementById("modal-bg").style.display = "flex";
+}
+
+function cerrarModal() {
+    document.getElementById("modal-bg").style.display = "none";
+}
+
+document.getElementById("modal-bg").onclick = (e) => {
+    if (e.target.id === "modal-bg") cerrarModal();
+};
+
+/* ===========================
+   Cargar Cursos
+   =========================== */
 async function cargarCursos() {
     try {
         const resUC = await fetch(URL_USUARIO_CURSOS);
@@ -109,14 +276,19 @@ async function cargarCursos() {
             .map(r => r[1]);
 
         if (cursosAsign.length === 0) {
-            document.getElementById("msg").textContent = "No tienes cursos asignados.";
+            msg.textContent = "No tienes cursos asignados.";
             return;
         }
 
-        const resCB = await fetch(URL_CURSOS_BDD);
-        const csvCB = await resCB.text();
-        let rowsCB = parseCSV(csvCB);
+        const resC = await fetch(URL_CURSOS_BDD);
+        const csvC = await resC.text();
+        let rowsCB = parseCSV(csvC);
         rowsCB.shift();
+
+        const resCont = await fetch(URL_CURSOS_CONT);
+        const csvCont = await resCont.text();
+        let rowsCont = parseCSV(csvCont);
+        rowsCont.shift();
 
         let cont = document.getElementById("coursesContainer");
         cont.innerHTML = "";
@@ -125,6 +297,7 @@ async function cargarCursos() {
         cursosAsign.forEach(cod => {
             rowsCB.forEach(row => {
                 if (row[0] === cod) {
+
                     let card = document.createElement("div");
                     card.className = "card";
 
@@ -136,13 +309,20 @@ async function cargarCursos() {
                         </div>
                     `;
 
-                    card.onclick = () => {
-                        localStorage.setItem("curso_cod", row[0]);
-                        localStorage.setItem("curso_titulo", row[1]);
-                        localStorage.setItem("curso_desc", row[2]);
-                        localStorage.setItem("curso_img", row[3]);
+                    let tituloCurso = row[1];
 
-                        alert("Curso seleccionado: " + row[1]);
+                    /* Hover (PC) */
+                    card.onmouseenter = () => {
+                        if (window.innerWidth > 900) {
+                            let detalle = buscarDetalle(cod, rowsCont);
+                            abrirModal(tituloCurso, detalle);
+                        }
+                    };
+
+                    /* Clic (Móvil/PC) */
+                    card.onclick = () => {
+                        let detalle = buscarDetalle(cod, rowsCont);
+                        abrirModal(tituloCurso, detalle);
                     };
 
                     cont.appendChild(card);
@@ -152,8 +332,13 @@ async function cargarCursos() {
 
     } catch (e) {
         console.error(e);
-        document.getElementById("msg").textContent = "Error al cargar cursos.";
+        msg.textContent = "Error al cargar cursos.";
     }
+}
+
+function buscarDetalle(codCurso, contenidoRows) {
+    let row = contenidoRows.find(r => r[0] === codCurso);
+    return row ? (row[5] || "Sin detalle disponible") : "Sin información.";
 }
 
 cargarCursos();
