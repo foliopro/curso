@@ -324,7 +324,7 @@ const cursoCod   = localStorage.getItem("curso_cod");
 const cursoTitulo= localStorage.getItem("curso_titulo");
 const cursoImg   = localStorage.getItem("curso_imagen");
 
-/* Si no hay curso seleccionado, volver a curso.html */
+/* Si no hay curso seleccionado, volver a cursos.html */
 if (!cursoCod || !cursoTitulo) {
     window.location.href = "cursos.html";
 }
@@ -361,7 +361,7 @@ function logout(){
 
 /* Atrás */
 function goBack(){
-    window.location.href = "curso.html";
+    window.location.href = "cursos.html";
 }
 
 /* Modal */
