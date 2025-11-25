@@ -41,9 +41,14 @@ body {
 }
 
 /* ============================================
-   HEADER PREMIUM (UNA SOLA SECCIÓN)
+   HEADER PREMIUM
 ============================================ */
-/* LOGO + TEXTO en la misma línea */
+header {
+    text-align: center;
+    padding: 26px 10px 10px;
+}
+
+/* LOGO Y TEXTO MISMA LÍNEA */
 .header-logo-row {
     display: flex;
     align-items: center;
@@ -53,8 +58,8 @@ body {
 }
 
 .header-logo {
-    width: 48px;
-    height: 48px;
+    width: 46px;
+    height: 46px;
     border-radius: 14px;
     overflow: hidden;
     border: 1px solid var(--border-soft);
@@ -70,30 +75,28 @@ body {
 .header-title {
     font-size: 22px;
     font-weight: 600;
-    letter-spacing: 0.03em;
-    color: var(--text-main);
 }
 
+/* SUBTÍTULO CENTRADO */
 .header-sub {
     font-size: 14px;
     color: var(--text-muted);
     margin-bottom: 14px;
+    text-align: center;
+    width: 100%;
 }
 
-/* ============================================
-   MENU DE OPCIONES
-============================================ */
+/* BARRA DE OPCIONES */
 .menu-bar {
-    margin-top: 16px;
     display: flex;
     justify-content: center;
     gap: 22px;
+    margin-bottom: 14px;
 }
 
 .menu-btn {
     font-size: 14px;
     cursor: pointer;
-    color: var(--text-main);
     padding: 6px 12px;
     border-radius: 8px;
     transition: 0.2s;
@@ -110,7 +113,6 @@ body {
     padding: 20px;
     text-align: center;
     font-size: 18px;
-    color: var(--text-main);
 }
 
 .container {
@@ -144,16 +146,19 @@ body {
 /* CARD BODY */
 .card-body {
     padding: 20px;
-    text-align: center;
 }
 
-/* ℹ️ ICONO IZQUIERDA */
-.info-holder {
+/* TÍTULO + ÍCONO MISMA LÍNEA */
+.title-line {
     display: flex;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     margin-bottom: 6px;
+    width: 100%;
 }
 
+/* Ícono a la izquierda */
 .info-icon {
     font-size: 20px;
     cursor: pointer;
@@ -161,22 +166,16 @@ body {
     color: var(--text-main);
 }
 
-.info-icon:hover {
-    opacity: 0.7;
-}
-
 /* TÍTULO CENTRADO */
 .card-title {
     font-size: 18px;
     font-weight: 600;
     text-align: center;
-    cursor: pointer;
-    margin-bottom: 6px;
-    display: block;
-    width: 100%;
+    flex-grow: 1;
+    margin: 0;
 }
 
-/* DESCRIPCIÓN CENTRADA */
+/* Descripción */
 .card-desc {
     font-size: 14px;
     color: var(--text-muted);
@@ -184,7 +183,7 @@ body {
 }
 
 /* ============================================
-   MODAL PREMIUM GLASSMORPHISM
+   MODAL PREMIUM GLASS
 ============================================ */
 #modal-bg {
     position: fixed;
@@ -223,20 +222,13 @@ body {
     to   { opacity:1; transform:scale(1);}
 }
 
-/* ============================================
-   RESPONSIVE
-============================================ */
-@media (max-width:600px){
-    header { padding: 24px 10px 6px; }
-    .container { padding: 20px 14px 60px; }
-}
 </style>
 </head>
 
 <body>
 
 <header>
-    <!-- LOGO + canomdigital en la misma línea -->
+    <!-- LOGO + NOMBRE -->
     <div class="header-logo-row">
         <div class="header-logo">
             <img src="https://i.ibb.co/SwLDkhWg/Logo-CMD.jpg">
@@ -245,10 +237,10 @@ body {
         <div class="header-title">canomdigital</div>
     </div>
 
-    <!-- Subtítulo -->
+    <!-- SUBTÍTULO -->
     <div class="header-sub">Plataforma Digital</div>
 
-    <!-- Barra de opciones -->
+    <!-- MENU -->
     <div class="menu-bar">
         <div id="temaBtn" class="menu-btn">Tema</div>
         <div class="menu-btn" onclick="logout()">Cerrar sesión</div>
@@ -357,16 +349,17 @@ async function cargar(){
                     <img src="${img}" class="img-curso">
 
                     <div class="card-body">
-                        
-				<div class="title-row">
-				    <span class="info-icon" onclick="abrirModal('TITULO','DETALLE')">ℹ️</span>
-				    <span class="card-title titulo-curso">SMART LAWYER</span>
-				</div>
+
+                        <!-- TÍTULO + ÍCONO MISMA LÍNEA -->
+                        <div class="title-line">
+                            <span class="info-icon" onclick="abrirModal('${titulo}','${detalle.replace(/'/g,"\\'")}')">ℹ️</span>
+                            <span class="card-title titulo-curso">${titulo}</span>
+                        </div>
+
                         <div class="card-desc">${desc}</div>
                     </div>
                 `;
 
-                /* Click en título o imagen → entrar al curso (mañana desarrollamos esto) */
                 card.querySelector(".img-curso").onclick =
                 card.querySelector(".titulo-curso").onclick = () => {
                     alert("Entrar al curso: "+titulo);
