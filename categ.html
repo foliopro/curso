@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Dashboard - CanoMDigital</title>
+<title>Categorías - CanoMDigital</title>
 
 <style>
     body {
@@ -16,30 +16,31 @@
         background: #000;
         color: white;
         text-align: center;
-        font-size: 26px;
+        font-size: 22px;
         letter-spacing: 1px;
-        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+
+    #msg {
+        text-align: center;
+        padding: 25px;
+        font-size: 20px;
+        color: #555;
     }
 
     .container {
-        padding: 25px;
+        padding: 20px;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
     }
 
     .card {
         background: white;
         border-radius: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        overflow: hidden;
         cursor: pointer;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+        overflow: hidden;
+        transition: .2s ease;
     }
 
     .card img {
@@ -55,8 +56,7 @@
     .card-title {
         font-size: 18px;
         font-weight: bold;
-        margin-bottom: 8px;
-        color: #222;
+        margin-bottom: 6px;
     }
 
     .card-desc {
@@ -64,46 +64,31 @@
         color: #555;
     }
 
-    #msg {
-        text-align: center;
-        padding: 20px;
-        font-size: 20px;
-        color: #444;
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.18);
     }
+
 </style>
 
 </head>
 <body>
 
-<header>CanoMDigital – Mis Cursos</header>
+<header>Mis Cursos</header>
 
 <div id="msg">Cargando cursos...</div>
 <div class="container" id="coursesContainer"></div>
 
 <script>
-// ==========================================
-// URLs reales de tus hojas de Google Sheets
-// ==========================================
 const URL_USUARIO_CURSOS = 
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTW7_oAIdXB__TqA5-TIoiZ90qKfD109ihIW7PbEHCHZkZs5cMny-MGs3iukHz5OWFskFYBPIaHjA5J/pub?output=csv";
 
 const URL_CURSOS_BDD =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vRK5fDUiPrh1ihVYT-aC8GS9wfCcSuc0Auy2WpcuExPLkL36ZXasULcpKdTp_GYHXUrePujbjOFXrfR/pub?output=csv";
 
-
-// ==========================================
-// Validar sesión
-// ==========================================
 const usuarioLog = localStorage.getItem("usuario");
+if (!usuarioLog) window.location.href = "index.html";
 
-if (!usuarioLog) {
-    window.location.href = "index.html";
-}
-
-
-// ==========================================
-// Función para leer CSV y convertirlo seguro
-// ==========================================
 function parseCSV(text) {
     return text
         .split("\n")
@@ -112,79 +97,62 @@ function parseCSV(text) {
         .map(r => r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
 }
 
-
-// ==========================================
-// Cargar cursos asignados al usuario
-// ==========================================
 async function cargarCursos() {
     try {
-        // 1) Descargar Usuario_Cursos
         const resUC = await fetch(URL_USUARIO_CURSOS);
         const csvUC = await resUC.text();
         let rowsUC = parseCSV(csvUC);
-        rowsUC.shift(); // quitar encabezado
+        rowsUC.shift();
 
-        // Filtrar cursos asignados
-        let cursosAsignados = rowsUC
-            .filter(row => row[0].replace(/"/g,"").trim() === usuarioLog && row[2] === "A")
-            .map(row => row[1].trim());
+        let cursosAsign = rowsUC
+            .filter(r => r[0].replace(/"/g,"").trim() === usuarioLog && r[2] === "A")
+            .map(r => r[1]);
 
-        if (cursosAsignados.length === 0) {
+        if (cursosAsign.length === 0) {
             document.getElementById("msg").textContent = "No tienes cursos asignados.";
             return;
         }
 
-        // 2) Descargar Cursos_Bdd
         const resCB = await fetch(URL_CURSOS_BDD);
         const csvCB = await resCB.text();
         let rowsCB = parseCSV(csvCB);
-        rowsCB.shift(); // quitar encabezado
+        rowsCB.shift();
 
-        let container = document.getElementById("coursesContainer");
-        container.innerHTML = "";
+        let cont = document.getElementById("coursesContainer");
+        cont.innerHTML = "";
         document.getElementById("msg").style.display = "none";
 
-        // 3) Mostrar cards
-        cursosAsignados.forEach(cod => {
+        cursosAsign.forEach(cod => {
             rowsCB.forEach(row => {
-                let cursoCod = row[0];
-                let titulo = row[1];
-                let desc = row[2];
-                let img = row[3];
-
-                if (cursoCod === cod) {
-                    // Crear card
+                if (row[0] === cod) {
                     let card = document.createElement("div");
-                    card.classList.add("card");
+                    card.className = "card";
 
                     card.innerHTML = `
-                        <img src="${img}">
+                        <img src="${row[3]}">
                         <div class="card-body">
-                            <div class="card-title">${titulo}</div>
-                            <div class="card-desc">${desc}</div>
+                            <div class="card-title">${row[1]}</div>
+                            <div class="card-desc">${row[2]}</div>
                         </div>
                     `;
 
-                    // Al hacer clic → guardar curso y continuar
                     card.onclick = () => {
-                        localStorage.setItem("curso_cod", cursoCod);
-                        localStorage.setItem("curso_titulo", titulo);
-                        localStorage.setItem("curso_desc", desc);
-                        localStorage.setItem("curso_img", img);
+                        localStorage.setItem("curso_cod", row[0]);
+                        localStorage.setItem("curso_titulo", row[1]);
+                        localStorage.setItem("curso_desc", row[2]);
+                        localStorage.setItem("curso_img", row[3]);
 
-                        alert("Curso seleccionado: " + titulo);
-                        // Luego aquí se abrirá curso.html
+                        alert("Curso seleccionado: " + row[1]);
                     };
 
-                    container.appendChild(card);
+                    cont.appendChild(card);
                 }
             });
         });
 
     } catch (e) {
         console.error(e);
-        document.getElementById("msg").textContent =
-            "Error cargando cursos.";
+        document.getElementById("msg").textContent = "Error al cargar cursos.";
     }
 }
 
