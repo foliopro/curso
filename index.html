@@ -32,7 +32,7 @@
         color: var(--text-main);
     }
 
-    /* Panel visual (izquierda en desktop) */
+    /* Panel visual (izquierda) */
     .hero {
         flex: 1.1;
         position: relative;
@@ -123,7 +123,7 @@
         color: var(--text-muted);
     }
 
-    /* Panel login (derecha en desktop) */
+    /* Panel login (derecha) */
     .auth-wrapper {
         flex: 0.9;
         display: flex;
@@ -146,25 +146,12 @@
         overflow: hidden;
     }
 
-    .auth-card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: radial-gradient(circle at top, rgba(56,189,248,0.2), transparent 55%);
-        opacity: 0.6;
-        pointer-events: none;
-    }
+    .auth-inner { position: relative; z-index: 1; }
 
-    .auth-inner {
-        position: relative;
-        z-index: 1;
-    }
-
-    /* Logo y marca */
+    /* Logo */
     .brand-row {
         display: flex;
         align-items: center;
-        justify-content: flex-start;
         gap: 10px;
         margin-bottom: 12px;
     }
@@ -173,18 +160,11 @@
         width: 40px;
         height: 40px;
         border-radius: 14px;
-        background: rgba(15,23,42,0.9);
-        border: 1px solid rgba(148,163,184,0.35);
-        display: flex;
-        align-items: center;
-        justify-content: center;
         overflow: hidden;
+        border: 1px solid rgba(148,163,184,0.35);
     }
-
     .brand-logo img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        width: 100%; height: 100%; object-fit: cover;
     }
 
     .brand-name {
@@ -195,33 +175,21 @@
         color: var(--text-muted);
     }
 
-    .auth-title {
-        font-size: 20px;
-        margin: 0 0 4px;
-    }
+    .auth-title { font-size: 20px; margin: 0 0 4px; }
+    .auth-sub   { font-size: 13px; margin: 0 0 6px; color: var(--text-muted); }
 
-    .auth-sub {
+    /* NUEVO SUB-SALUDO */
+    #saludoDinamico {
+        margin: 0 0 16px;
         font-size: 13px;
-        margin: 0 0 18px;
-        color: var(--text-muted);
+        color: var(--accent);
+        font-weight: 600;
     }
 
-    /* Etiquetas + inputs */
-    .field {
-        margin-bottom: 14px;
-        text-align: left;
-    }
+    .field { margin-bottom: 14px; text-align: left; }
+    .field label { color: var(--text-muted); font-size: 12px; margin-bottom: 4px; }
 
-    .field label {
-        display: block;
-        font-size: 12px;
-        color: var(--text-muted);
-        margin-bottom: 4px;
-    }
-
-    .input-wrapper {
-        position: relative;
-    }
+    .input-wrapper { position: relative; }
 
     input {
         width: 100%;
@@ -232,16 +200,6 @@
         color: var(--text-main);
         font-size: 14px;
         outline: none;
-        transition: 0.2s;
-    }
-
-    input::placeholder {
-        color: rgba(148,163,184,0.7);
-    }
-
-    input:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 1px rgba(56,189,248,0.6);
     }
 
     #togglePass {
@@ -251,7 +209,6 @@
         transform: translateY(-50%);
         cursor: pointer;
         font-size: 17px;
-        user-select: none;
         color: var(--text-muted);
     }
 
@@ -265,20 +222,6 @@
         font-size: 15px;
         font-weight: 600;
         cursor: pointer;
-        margin-top: 6px;
-        box-shadow: 0 12px 30px rgba(37,99,235,0.55);
-        transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
-    }
-
-    button:hover {
-        filter: brightness(1.06);
-        transform: translateY(-1px);
-        box-shadow: 0 16px 36px rgba(37,99,235,0.7);
-    }
-
-    button:active {
-        transform: translateY(0);
-        box-shadow: 0 10px 24px rgba(37,99,235,0.45);
     }
 
     .error {
@@ -286,76 +229,14 @@
         margin-top: 8px;
         font-size: 12px;
         min-height: 16px;
-        text-align: left;
     }
 
-    .foot-note {
-        margin-top: 14px;
-        font-size: 11px;
-        color: var(--text-muted);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 10px;
-    }
-
-    .pill-soft {
-        padding: 3px 8px;
-        border-radius: 999px;
-        background: var(--accent-soft);
-        color: var(--accent);
-        font-size: 10px;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-    }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-        body {
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .hero {
-            flex: none;
-            min-height: 210px;
-            padding: 22px 18px 14px;
-        }
-
-        .hero-content {
-            text-align: left;
-        }
-
-        .hero-title {
-            font-size: 24px;
-        }
-
-        .auth-wrapper {
-            flex: none;
-            padding: 18px 16px 26px;
-        }
-
-        .auth-card {
-            border-radius: 20px 20px 0 0;
-            max-width: 430px;
-            margin: 0 auto;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .hero {
-            min-height: 190px;
-        }
-        .hero-title {
-            font-size: 22px;
-        }
-    }
 </style>
-
 </head>
+
 <body>
 
-<!-- PANEL IZQUIERDO: BRANDING canomdigital -->
+<!-- IZQUIERDA -->
 <section class="hero">
     <div class="hero-content">
         <div class="brand-badge">
@@ -374,34 +255,32 @@
         </p>
 
         <div class="hero-pill">
-            <span>⚡</span>
-            <span>Acceso seguro • Gestión centralizada de cursos</span>
+            ⚡ Acceso seguro • Gestión centralizada de cursos
         </div>
     </div>
 </section>
 
-<!-- PANEL DERECHO: LOGIN -->
+<!-- DERECHA LOGIN -->
 <section class="auth-wrapper">
     <div class="auth-card">
         <div class="auth-inner">
 
             <div class="brand-row">
                 <div class="brand-logo">
-                    <!-- ✅ REEMPLAZA ESTA URL POR LA DE TU LOGO -->
-                    <img src="REEMPLAZA_AQUI_URL_DEL_LOGO" alt="Logo canomdigital">
+                    <img src="https://i.ibb.co/SwLDkhWg/Logo-CMD.jpg">
                 </div>
                 <div>
                     <div class="brand-name">canomdigital</div>
-                    <div style="font-size:12px;color:var(--text-muted);">
-                        Acceso privado a cursos
-                    </div>
+                    <div style="font-size:12px;color:var(--text-muted);">Acceso privado a cursos</div>
                 </div>
             </div>
 
             <h2 class="auth-title">Bienvenido de nuevo</h2>
-            <p class="auth-sub">
-                Inicia sesión con tu usuario asignado en la plataforma.
-            </p>
+
+            <!-- Saludo dinámico aquí -->
+            <div id="saludoDinamico"></div>
+
+            <p class="auth-sub">Inicia sesión con tu usuario asignado en la plataforma.</p>
 
             <div class="field">
                 <label for="user">Usuario</label>
@@ -413,19 +292,14 @@
             <div class="field">
                 <label for="pass">Contraseña</label>
                 <div class="input-wrapper">
-                    <input id="pass" type="password" placeholder="Ingresa tu contraseña" style="padding-right: 38px;">
+                    <input id="pass" type="password" placeholder="Ingresa tu contraseña">
                     <span id="togglePass">👁️</span>
                 </div>
             </div>
 
             <button onclick="login()">Ingresar</button>
-
             <div id="errorMsg" class="error"></div>
 
-            <div class="foot-note">
-                <span class="pill-soft">canomdigital</span>
-                <span>Protegido con verificación de estado y vencimiento.</span>
-            </div>
         </div>
     </div>
 </section>
@@ -434,74 +308,88 @@
 const SHEET_URL =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vShtZKwAc_7NELD5egApRLhY-w9r_V1Px5y5KFx5XLQzCfZF9LEBEJ0ClihZVUlrdoahnolXDzsGELu/pub?output=csv";
 
+/* Mostrar/Ocultar Password */
 const passInput = document.getElementById("pass");
-const togglePass = document.getElementById("togglePass");
+document.getElementById("togglePass").onclick = () => {
+    const hidden = passInput.type === "password";
+    passInput.type = hidden ? "text" : "password";
+    togglePass.textContent = hidden ? "🙈" : "👁️";
+};
 
-togglePass.addEventListener("click", () => {
-    const isHidden = passInput.type === "password";
-    passInput.type = isHidden ? "text" : "password";
-    togglePass.textContent = isHidden ? "🙈" : "👁️";
-});
-
-function parseCSV(text) {
-    return text
-        .split("\n")
-        .map(r => r.replace(/\r/g, "").trim())
-        .filter(r => r.length > 0)
-        .map(r => r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
+/* Parse CSV */
+function parseCSV(t){
+    return t.split("\n")
+        .map(r=>r.replace(/\r/g,"").trim())
+        .filter(r=>r.length)
+        .map(r=>r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/));
 }
 
+/* SALUDO DINÁMICO */
+function generarSaludo(){
+    const h = new Date().getHours();
+    const saludo =
+        h < 12 ? "Buenos días" :
+        h < 18 ? "Buenas tardes" :
+                 "Buenas noches";
+    document.getElementById("saludoDinamico").textContent =
+        saludo + ", bienvenido a canomdigital.";
+}
+generarSaludo();
+
+/* LOGIN */
 async function login() {
     let u = document.getElementById("user").value.trim();
     let p = document.getElementById("pass").value.trim();
-    let error = document.getElementById("errorMsg");
-    error.textContent = "";
+    let err = document.getElementById("errorMsg");
 
-    if (u === "" || p === "") {
-        error.textContent = "Por favor, completa usuario y contraseña.";
+    err.textContent = "";
+
+    if (!u || !p){
+        err.textContent = "Por favor completa usuario y contraseña.";
         return;
     }
 
     try {
-        const response = await fetch(SHEET_URL);
-        const csv = await response.text();
+        const txt = await (await fetch(SHEET_URL)).text();
+        const rows = parseCSV(txt);
+        rows.shift();
 
-        let rows = parseCSV(csv);
-        rows.shift(); // quitar encabezado
+        let ok = false;
 
-        let found = false;
+        for(let r of rows){
+            let usuario  = (r[0]||"").replace(/"/g,"").trim();
+            let nombre   = r[1];
+            let vence    = r[4];
+            let tipo     = r[5];
+            let estado   = r[6];
+            let password = (r[7]||"").replace(/"/g,"").trim();
 
-        rows.forEach(row => {
-            let usuario = (row[0] || "").replace(/"/g,"").trim();
-            let vence   = row[4];
-            let tipo    = row[5];
-            let estado  = row[6];
-            let password= (row[7] || "").replace(/"/g,"").trim();
+            if(usuario===u && password===p){
+                ok = true;
 
-            if (usuario === u && password === p) {
-                found = true;
-
-                if (estado !== "A") {
-                    error.textContent = "Tu usuario está inactivo. Contacta a canomdigital.";
+                if(estado !== "A"){
+                    err.textContent = "Usuario inactivo. Contacta a soporte.";
                     return;
                 }
 
+                /* GUARDAR TODO */
                 localStorage.setItem("usuario", usuario);
-                localStorage.setItem("estado", estado);
+                localStorage.setItem("usuario_nombre", nombre);
                 localStorage.setItem("vence", vence);
                 localStorage.setItem("tipo", tipo);
 
-                window.location.href = "categ.html";
+                /* REDIRECCIÓN CORRECTA */
+                window.location.href = "cursos.html";
             }
-        });
-
-        if (!found) {
-            error.textContent = "Usuario o contraseña incorrectos.";
         }
 
-    } catch (e) {
-        error.textContent = "Error de conexión con la base de datos.";
+        if(!ok){
+            err.textContent = "Usuario o contraseña incorrectos.";
+        }
+
+    } catch(e){
         console.error(e);
+        err.textContent = "Error al conectar con la base de datos.";
     }
 }
 </script>
