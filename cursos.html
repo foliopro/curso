@@ -122,7 +122,7 @@ header {
     gap: 26px;
 }
 
-/* === ANIMACIÓN IGUAL A categ.html === */
+/* CARD con animación de entrada */
 .card {
     background: var(--card-bg);
     border-radius: 18px;
@@ -132,7 +132,6 @@ header {
     transition: 0.25s ease;
     cursor: pointer;
 
-    /* ANIMACIÓN PREMIUM */
     opacity: 0;
     animation: fadeUp 0.6s ease forwards;
 }
@@ -142,15 +141,23 @@ header {
     to   { opacity:1; transform: translateY(0); }
 }
 
+/* Hover en la card */
 .card:hover {
     transform: translateY(-6px);
     box-shadow: 0 16px 40px rgba(0,0,0,0.45);
 }
 
+/* IMAGEN con animación de hover (lo que faltaba) */
 .card img {
     width: 100%;
     height: 160px;
     object-fit: cover;
+    transition: transform 0.4s ease, filter 0.4s ease; /* <- AQUÍ */
+}
+
+.card:hover img {
+    transform: scale(1.06);   /* <- zoom suave */
+    filter: brightness(1.05); /* <- ligero brillo */
 }
 
 .card-body {
@@ -250,7 +257,6 @@ header {
 </div>
 
 <script>
-/* URLs */
 const URL_USUARIO_CURSOS =
 "https://docs.google.com/spreadsheets/d/e/2PACX-1vTW7_oAIdXB__TqA5-TIoiZ90qKfD109ihIW7PbEHCHZkZs5cMny-MGs3iukHz5OWFskFYBPIaHjA5J/pub?output=csv";
 
@@ -265,11 +271,11 @@ if (!localStorage.getItem("usuario")) {
     window.location.href = "index.html";
 }
 
-/* Mostrar nombre del usuario */
+/* Nombre del usuario */
 document.getElementById("userNameLabel").textContent =
     localStorage.getItem("usuario_nombre") || "";
 
-/* Parse CSV */
+/* CSV */
 function parseCSV(t){
     return t.split("\n")
             .map(r => r.replace(/\r/g,"").trim())
@@ -323,11 +329,14 @@ async function cargar(){
     uc.shift(); cb.shift(); cc.shift();
 
     let asign = uc.filter(r=>r[0]===user && r[2]==="A").map(r=>r[1]);
-    if(!asign.length){ msg.textContent="No tienes cursos asignados."; return; }
+    if(!asign.length){ 
+        document.getElementById("msg").textContent="No tienes cursos asignados."; 
+        return; 
+    }
 
     let cont=document.getElementById("coursesContainer");
     cont.innerHTML="";
-    msg.style.display="none";
+    document.getElementById("msg").style.display="none";
 
     asign.forEach(code=>{
         cb.forEach(row=>{
@@ -340,7 +349,6 @@ async function cargar(){
 
                 card.innerHTML=`
                     <img src="${img}" class="img-curso">
-
                     <div class="card-body">
                         <div class="title-line">
                             <span class="info-icon" onclick="abrirModal('${titulo}','${detalle.replace(/'/g,"\\'")}')">ℹ️</span>
@@ -355,13 +363,12 @@ async function cargar(){
                     localStorage.setItem("curso_titulo", titulo);
                     localStorage.setItem("curso_desc", desc);
                     localStorage.setItem("curso_imagen", img);
-
                     window.location.href = "categ.html";
                 }
 
-                card.querySelector(".img-curso").onclick = abrirCurso;
+                card.querySelector(".img-curso").onclick   = abrirCurso;
                 card.querySelector(".titulo-curso").onclick = abrirCurso;
-                card.querySelector(".card-desc").onclick = abrirCurso;
+                card.querySelector(".card-desc").onclick    = abrirCurso;
 
                 cont.appendChild(card);
             }
