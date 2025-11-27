@@ -284,7 +284,7 @@ function loadDaytime(){
 }
 document.getElementById("daytimeMessage").textContent = loadDaytime()+", bienvenido a canomdigital.";
 
-/* LOGIN */
+/* LOGIN CON OPCIÓN 3 APLICADA */
 async function login(){
     const user=document.getElementById("usuario").value.trim();
     const pass=document.getElementById("password").value.trim();
@@ -298,15 +298,22 @@ async function login(){
 
     let ok=false;
     let nombre="";
+    let estado="";
+
     for(let r of rows){
-        if(r[0]===user && r[7]===pass && r[6]==="A"){
+
+        /* Opción 3 → Password siempre es la última columna */
+        let passwordReal = r[r.length - 1]?.trim();
+
+        if(r[0]===user && passwordReal===pass){
             ok=true;
             nombre=r[1];
+            estado=r[6];
             break;
         }
     }
 
-    if(!ok){
+    if(!ok || estado!=="A"){
         document.getElementById("errorMsg").style.display="block";
         return;
     }
@@ -328,3 +335,4 @@ async function login(){
 
 </body>
 </html>
+
