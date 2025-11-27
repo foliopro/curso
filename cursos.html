@@ -360,19 +360,10 @@ async function cargar(){
                     </div>
                 `;
 
-                /* 🔵 ABRIR CURSO Y GUARDAR EN LOCALSTORAGE */
-                function abrirCurso() {
-                    localStorage.setItem("curso_cod", code);
-                    localStorage.setItem("curso_titulo", titulo);
-                    localStorage.setItem("curso_desc", desc);
-                    localStorage.setItem("curso_imagen", img);  // 🔵 Nueva línea importante
-
-                    window.location.href = "categ.html";
-                }
-
-                card.querySelector(".img-curso").onclick = abrirCurso;
-                card.querySelector(".titulo-curso").onclick = abrirCurso;
-                card.querySelector(".card-desc").onclick = abrirCurso;
+                card.querySelector(".img-curso").onclick =
+                card.querySelector(".titulo-curso").onclick = () => {
+                    alert("Entrar al curso: "+titulo);
+                };
 
                 cont.appendChild(card);
             }
