@@ -195,20 +195,24 @@ input:focus {
 
 /* ======================= RESPONSIVE ======================= */
 @media (max-width: 900px) {
+
     .main {
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
 
+    /* HERO ARRIBA */
     .hero {
-        order: 2;
+        order: 1;
     }
 
+    /* LOGIN ABAJO */
     .auth-wrapper {
-        order: 1;
+        order: 2;
         width: 100%;
         max-width: 420px;
+        margin-top: 30px;
     }
 
     .hero-title,
@@ -282,9 +286,10 @@ function loadDaytime(){
     if(h<18) return "Buenas tardes";
     return "Buenas noches";
 }
-document.getElementById("daytimeMessage").textContent = loadDaytime()+", bienvenido a canomdigital.";
+document.getElementById("daytimeMessage").textContent =
+    loadDaytime()+", bienvenido a canomdigital.";
 
-/* LOGIN CON OPCIÓN 3 APLICADA */
+/* LOGIN (con opción 3: password = última columna) */
 async function login(){
     const user=document.getElementById("usuario").value.trim();
     const pass=document.getElementById("password").value.trim();
@@ -302,7 +307,7 @@ async function login(){
 
     for(let r of rows){
 
-        /* Opción 3 → Password siempre es la última columna */
+        /* Opción 3: Última columna = contraseña */
         let passwordReal = r[r.length - 1]?.trim();
 
         if(r[0]===user && passwordReal===pass){
@@ -335,4 +340,3 @@ async function login(){
 
 </body>
 </html>
-
